@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AD466CEB2E57D6F40067435B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AD466CEA2E57D6F40067435B /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		AD466CC62E57D5F10067435B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		AD466CB32E57D5EF0067435B /* tratto-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "tratto-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD466CC52E57D5F10067435B /* tratto-appTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "tratto-appTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD466CCF2E57D5F10067435B /* tratto-appUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "tratto-appUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD466CEA2E57D6F40067435B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -79,6 +84,7 @@
 				AD466CC82E57D5F10067435B /* tratto-appTests */,
 				AD466CD22E57D5F10067435B /* tratto-appUITests */,
 				AD466CB42E57D5EF0067435B /* Products */,
+				AD466CEA2E57D6F40067435B /* .gitignore */,
 			);
 			sourceTree = "<group>";
 		};
@@ -212,6 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD466CEB2E57D6F40067435B /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
