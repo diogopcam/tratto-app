@@ -10,6 +10,7 @@ import SwiftUI
 
 @MainActor
 final class CollectionService: CollectionServiceProtocol {
+    
     private let context: ModelContext
     
     init(context: ModelContext) {
@@ -17,7 +18,6 @@ final class CollectionService: CollectionServiceProtocol {
     }
     
     // MARK: - CRUD Operations
-    
     func fetchAllCollections() -> [Collection] {
         let descriptor = FetchDescriptor<Collection>(
             sortBy: [SortDescriptor(\.title)]
@@ -64,10 +64,15 @@ final class CollectionService: CollectionServiceProtocol {
     
     // MARK: - References Management
     
-    func addReference(to collection: Collection, text: String?, image: UIImage) throws -> Reference {
-        let reference = Reference(text: text, image: image, collection: collection)
+    // Em CollectionService, verifique o save:
+    func addReference(to collection: Collection, text: String?, imageData: Data) throws -> Reference {
+        let reference = Reference(text: text, imageData: imageData, collection: collection)
         collection.references.append(reference)
+        context.insert(reference) // ← Certifique-se disso
         try context.save()
+        
+        // LOG
+        print("Added reference to collection: \(collection.references.count)")
         return reference
     }
     
@@ -77,15 +82,28 @@ final class CollectionService: CollectionServiceProtocol {
         try context.save()
     }
     
-    func fetchReferences(for collection: Collection?) -> [Reference] {
-        guard let collection = collection else {
-            let descriptor = FetchDescriptor<Reference>(
-                sortBy: [SortDescriptor(\.creationDate, order: .reverse)]
-            )
-            return (try? context.fetch(descriptor)) ?? []
+    func fetchReferences(for collection: Collection) -> [Reference] {
+        // LOG 3: Verificar a coleção no serviço
+        print("=== DEBUG: CollectionService ===")
+        print("Fetching references for collection: \(collection.title)")
+        print("Collection references array count: \(collection.references.count)")
+        
+        let references = collection.references.sorted(by: { $0.creationDate < $1.creationDate })
+        
+        // LOG 4: Verificar o resultado ordenado
+        print("Sorted references count: \(references.count)")
+        references.forEach { ref in
+            print(" - Sorted Reference: \(ref.text ?? "no text"), Date: \(ref.creationDate)")
         }
         
-        return collection.references.sorted { $0.creationDate > $1.creationDate }
+        return references
+    }
+    
+    func deleteReferences(_ references: [Reference]) throws {
+        for reference in references {
+            context.delete(reference)
+        }
+        try context.save()
     }
     
     // MARK: - Bulk Operations

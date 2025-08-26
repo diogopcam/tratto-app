@@ -19,6 +19,7 @@ final class AddCollectionVM: AddCollectionVMProtocol {
     @Published var selectedImageDatas: [Data] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
+    @Published var newCollection: Collection? = nil
     
     private let collectionService: CollectionServiceProtocol
     
@@ -52,16 +53,20 @@ final class AddCollectionVM: AddCollectionVMProtocol {
             // Cria a coleção
             let collection = try collectionService.createCollection(title: collectionName)
             
+            // Notifica a criação
+            newCollection = collection
+            
             // Adiciona as referências (imagens)
             for imageData in selectedImageDatas {
-                if let uiImage = UIImage(data: imageData) {
-                    _ = try collectionService.addReference(to: collection, text: nil, image: uiImage)
+                do {
+                    _ = try collectionService.addReference(to: collection, text: nil, imageData: imageData)
+                } catch {
+                    errorMessage = "Erro ao adicionar referência: \(error.localizedDescription)"
                 }
             }
             
             isLoading = false
             return true
-            
         } catch {
             isLoading = false
             errorMessage = "Erro ao salvar coleção: \(error.localizedDescription)"

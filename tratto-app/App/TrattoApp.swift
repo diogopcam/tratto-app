@@ -16,7 +16,6 @@ struct TrattoApp: App {
         do {
             let container = try ModelContainer(for: appSchema)
             self.diContainer = DIContainer(modelContainer: container)
-            try self.diContainer.clearAllData()
         } catch {
             print("⚠️ Erro ao criar container persistente: \(error)")
             let fallback = try! ModelContainer(

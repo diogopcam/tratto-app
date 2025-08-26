@@ -83,10 +83,3 @@ struct ReferenceCard: View {
         .buttonStyle(PlainButtonStyle())
     }
 }
-
-#Preview {
-    VStack(spacing: 16) {
-        ReferenceCard(reference: Reference(text: "Exemplo de referência", image: UIImage(named: "img2")!, collection: nil))
-        ReferenceCard(reference: Reference(text: nil, image: UIImage(named: "img3")!, collection: nil))
-    }
-}

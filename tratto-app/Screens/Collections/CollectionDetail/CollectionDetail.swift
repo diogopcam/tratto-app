@@ -9,37 +9,18 @@ import SwiftUI
 import SwiftData
 
 struct CollectionDetail: View {
-    @Environment(\.modelContext) private var context
-    @Query var collections: [Collection]
-    let collection: Collection
-    
+    @StateObject private var vm: CollectionDetailVM
     @State private var addRefs = false
-    @State private var selectedReference: Reference? = nil
     @Environment(\.dismiss) private var dismiss
     
+    init(collection: Collection, collectionService: CollectionServiceProtocol) {
+        _vm = StateObject(wrappedValue: CollectionDetailVM(collection: collection, collectionService: collectionService))
+    }
+    
     var body: some View {
-        VStack {
-            if collection.references.isEmpty {
-                Spacer()
-                RefsEmptyState(addRefs: $addRefs)
-                Spacer()
-            } else {
-                ScrollView {
-                    LazyVGrid(columns: [GridItem(), GridItem()], spacing: 16) {
-                        ForEach(collection.references) { reference in
-                            ReferenceCard(reference: reference) {
-                                selectedReference = reference
-                            }
-                        }
-                    }
-                    .padding()
-                    Spacer()
-                }
-            }
-        }
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-                    // Botão de voltar personalizado (esquerda)
+            contentView
+                .navigationBarBackButtonHidden(true)
+                .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: { dismiss() }) {
                             Image(systemName: "chevron.left")
@@ -47,39 +28,58 @@ struct CollectionDetail: View {
                         }
                     }
                     
-                    // Título centralizado
                     ToolbarItem(placement: .principal) {
-                        Text(collection.title)
+                        Text("Coleção")
                             .font(.custom("HelveticaNeue-Bold", size: 26))
                             .foregroundColor(.primary)
                     }
                     
-                    // Botão de adicionar (direita)
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button {
                             addRefs = true
                         } label: {
                             Image(systemName: "plus.circle.fill")
                                 .resizable()
-                                .frame(width: 44, height: 44) // Tamanho menor para melhor proporção
+                                .frame(width: 44, height: 44)
                                 .foregroundColor(.pink)
                         }
                     }
                 }
                 .sheet(isPresented: $addRefs) {
-                    AddRefs(collection: collection) {
-                        addRefs = false
+                    // AddRefs(collection: vm.collection) { addRefs = false }
+                }
+                .navigationDestination(for: Reference.self) { reference in
+                    ReferenceDetail(reference: reference)
+                }
+                .alert("Erro", isPresented: .constant(vm.errorMessage != nil), presenting: vm.errorMessage) { error in
+                    Button("OK", role: .cancel) {
+                        vm.errorMessage = nil
+                    }
+                } message: { error in
+                    Text(error)
+                }
+        }
+    
+    @ViewBuilder
+    private var contentView: some View {
+        if vm.references.isEmpty {
+            Spacer()
+            RefsEmptyState(addRefs: $addRefs)
+            Spacer()
+        } else {
+            ScrollView {
+                LazyVGrid(columns: [GridItem(), GridItem()], spacing: 16) {
+                    ForEach(vm.references) { reference in
+                        ReferenceCard(reference: reference) {
+                            // Navegação programática usando NavigationPath
+//                            navigationPath.append(reference)
+                            vm.selectedReference = reference
+                        }
                     }
                 }
-                .background(
-                    NavigationLink(
-                        destination: selectedReference.map { ReferenceDetail(reference: $0) },
-                        isActive: Binding(
-                            get: { selectedReference != nil },
-                            set: { if !$0 { selectedReference = nil } }
-                        )
-                    ) { EmptyView() }
-                    .hidden()
-                )
+                .padding()
+                Spacer()
             }
         }
+    }
+}

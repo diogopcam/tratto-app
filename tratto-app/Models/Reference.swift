@@ -5,12 +5,12 @@
 //  Created by Diogo Camargo on 08/08/25.
 //
 
-
 import SwiftData
 import SwiftUI
 
 @Model
-class Reference {
+final class Reference: Identifiable {
+    @Attribute(.unique) var id: UUID = UUID()   // necessário para SwiftData
     var text: String?
     var imageData: Data
     var creationDate: Date
@@ -20,9 +20,9 @@ class Reference {
         UIImage(data: imageData)
     }
 
-    init(text: String?, image: UIImage, collection: Collection?) {
+    init(text: String?, imageData: Data, collection: Collection?) {
         self.text = text
-        self.imageData = image.jpegData(compressionQuality: 0.8) ?? Data()
+        self.imageData = imageData
         self.creationDate = Date()
         self.collection = collection
     }

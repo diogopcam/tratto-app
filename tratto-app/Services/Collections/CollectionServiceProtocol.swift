@@ -20,12 +20,15 @@ protocol CollectionServiceProtocol {
     func deleteCollections(_ collections: Set<Collection>) throws
     
     // MARK: - References Management
-    func addReference(to collection: Collection, text: String?, image: UIImage) throws -> Reference
+    func addReference(to collection: Collection, text: String?, imageData: Data) throws -> Reference
     func removeReference(_ reference: Reference, from collection: Collection) throws
-    func fetchReferences(for collection: Collection?) -> [Reference]
     
     // MARK: - Bulk Operations
     func getCollectionsCount() -> Int
     func getReferencesCount(for collection: Collection?) -> Int
     func hasCollections() -> Bool
+    
+    func deleteReferences(_ references: [Reference]) throws   // ← Adicione isto
+    
+    func fetchReferences(for collection: Collection) -> [Reference]
 }

@@ -29,10 +29,6 @@ final class CollectionsVM: CollectionsVMProtocol {
         await MainActor.run {
             self.collections = self.collectionService.fetchAllCollections()
             self.isLoading = false
-            
-            if self.collections.isEmpty {
-                self.createMockData()
-            }
         }
     }
     
@@ -76,21 +72,5 @@ final class CollectionsVM: CollectionsVMProtocol {
     func clearSelection() {
         selectedCollections.removeAll()
         isEditing = false
-    }
-    
-    private func createMockData() {
-        let mockCollections = [
-            "Tatuagens Realistas",
-            "Blackwork",
-            "Aquarela",
-            "Old School",
-            "Minimalista"
-        ]
-        
-        for title in mockCollections {
-            try? collectionService.createCollection(title: title)
-        }
-        
-        collections = collectionService.fetchAllCollections()
     }
 }

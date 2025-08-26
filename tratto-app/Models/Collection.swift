@@ -10,9 +10,8 @@ import SwiftData
 import Foundation
 
 @Model
-class Collection {
+final class Collection {
     var title: String
-    @Relationship(deleteRule: .cascade)
     var references: [Reference] = []
 
     init(title: String) {
