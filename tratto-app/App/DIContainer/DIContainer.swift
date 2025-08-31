@@ -13,14 +13,14 @@ final class DIContainer {
     let modelContainer: ModelContainer
     //    let tattooArtistService: TattooArtistServiceProtocol
     let collectionService: CollectionServiceProtocol
-    //    let referenceService: ReferenceServiceProtocol
+    let referenceService: ReferenceServiceProtocol
     var databaseCleaner: DatabaseCleanerServiceProtocol?
     
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
         //        self.tattooArtistService = TattooArtistService(context: modelContainer.mainContext)
         self.collectionService = CollectionService(context: modelContainer.mainContext)
-        //        self.referenceService = ReferenceService(context: modelContainer.mainContext)
+        self.referenceService = ReferenceService(context: modelContainer.mainContext)
         self.databaseCleaner = DatabaseCleanerService(context: modelContainer.mainContext)
         self.databaseCleaner = DatabaseCleanerService(context: modelContainer.mainContext)
     }
@@ -32,6 +32,7 @@ final class DIContainer {
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
         collectionService = CollectionService(context: modelContainer.mainContext)
+        referenceService = ReferenceService(context: modelContainer.mainContext)
     }
     
     // Método conveniente para limpar tudo

@@ -17,7 +17,7 @@ final class CollectionDetailVM: ObservableObject {
     @Published var selectedReference: Reference? = nil
     
     let collection: Collection
-    private let collectionService: CollectionServiceProtocol
+    let collectionService: CollectionServiceProtocol
     
     init(collection: Collection, collectionService: CollectionServiceProtocol) {
         print("🔄 CollectionDetailVM INIT")

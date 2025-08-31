@@ -4,138 +4,117 @@
 //
 //  Created by Diogo Camargo on 05/08/25.
 //
-//
-//import SwiftUI
-//import PhotosUI
-//import SwiftData
-//
-//struct AddRefs: View {
-//    @Environment(\.dismiss) var dismiss
-//    @Environment(\.modelContext) private var context
-//    
-//    let collection: Collection
-//    var onSave: () -> Void // Callback para fechar e atualizar
-//    
-//    @State private var noteText: String = ""
-//    @State private var selectedItem: PhotosPickerItem?
-//    @State private var selectedImageData: Data?
-//    
-//    func deleteImage() {
-//        selectedImageData = nil
-//        selectedItem = nil
-//    }
-//    
-//    var body: some View {
-//        NavigationStack {
-//            VStack(alignment: .leading, spacing: 24) {
-//                
-//                // Campo de anotação
-//                VStack(alignment: .leading, spacing: 8) {
-//                    Text("Insira uma anotação sobre a referência")
-//                        .font(.custom("HelveticaNeue-Bold", size: 16))
-//                    
-//                    TextEditor(text: $noteText)
-//                        .background(Color(.systemGray6))
-//                        .frame(height: 202)
-//                        .cornerRadius(8)
-//                        .overlay(
-//                            RoundedRectangle(cornerRadius: 8)
-//                                .stroke(Color.gray, lineWidth: 1)
-//                        )
-//                        .tint(.pink)
-//                        .multilineTextAlignment(.leading)
-//                }
-//                
-//                // Seletor de imagem
-//                VStack(alignment: .leading, spacing: 8) {
-//                    Text("Selecionar uma foto da sua galeria")
-//                        .font(.custom("HelveticaNeue-Bold", size: 16))
-//                    
-//                    if let data = selectedImageData {
-//                        ImageDisplayRef(imageData: Binding(
-//                            get: { data },
-//                            set: { newValue in
-//                                selectedImageData = newValue
-//                            }
-//                        )) {
-//                            deleteImage()
-//                        }
-//                        .frame(maxWidth: .infinity, maxHeight: 254)
-//                        
-//                    } else {
-//                        ImagePickerButton(selectedItem: $selectedItem)
-//                            .onChange(of: selectedItem) {
-//                                Task {
-//                                    selectedImageData = nil
-//                                    if let item = selectedItem {
-//                                        if let data = try? await item.loadTransferable(type: Data.self) {
-//                                            selectedImageData = data
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                            .frame(maxWidth: .infinity, maxHeight: 254)
-//                    }
-//                }
-//                
-//                Spacer()
-//            }
-//            .frame(maxWidth: .infinity, maxHeight: .infinity)
-//            .navigationTitle("Criar nova referência")
-//            .navigationBarTitleDisplayMode(.inline)
-//            .padding(.top, 38)
-//            .padding(.horizontal, 16)
-//            .background(Color.backgroundSecondary)
-//            .toolbar {
-//                ToolbarItem(placement: .cancellationAction) {
-//                    Button {
-//                        dismiss()
-//                    } label: {
-//                        Image(systemName: "xmark.circle.fill")
-//                            .resizable()
-//                            .frame(width: 44, height: 44)
-//                            .foregroundStyle(.gray)
-//                    }
-//                    .buttonStyle(PlainButtonStyle())
-//                }
-//                
-//                ToolbarItem(placement: .confirmationAction) {
-//                    Button {
-//                        saveReference()
-//                    } label: {
-//                        Image(systemName: "arrow.up.circle.fill")
-//                            .resizable()
-//                            .frame(width: 44, height: 44)
-//                            .foregroundStyle(.pink)
-//                    }
-//                    .buttonStyle(PlainButtonStyle())
-//                    .disabled(selectedImageData == nil)
-//                }
-//            }
-//        }
-//    }
-//    
-//    private func saveReference() {
-//        guard let imageData = selectedImageData,
-//              let uiImage = UIImage(data: imageData) else {
-//            return
-//        }
-//        
-//        let reference = Reference(
-//            text: noteText.isEmpty ? nil : noteText,
-//            image: uiImage,
-//            collection: collection
-//        )
-//        
-//        collection.references.append(reference)
-//        context.insert(reference)
-//        
-//        do {
-//            try context.save()
-//            print("Referência salva com sucesso!")
-//            onSave() // Fecha o sheet e atualiza a lista
-//        } catch {
-//            print("Erro ao salvar referência:", error)
-//        }
-//    }
-//}
+
+import SwiftUI
+import PhotosUI
+
+struct AddRefs: View {
+    @Environment(\.dismiss) var dismiss
+    @StateObject private var vm: AddRefsVM
+    
+    init(collection: Collection,
+         collectionService: CollectionServiceProtocol,
+         onSave: @escaping () -> Void) {
+        _vm = StateObject(wrappedValue: AddRefsVM(
+            collection: collection,
+            collectionService: collectionService,
+            onSave: onSave
+        ))
+    }
+    
+    var body: some View {
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 24) {
+                
+                // Campo de anotação
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Insira uma anotação sobre a referência")
+                        .font(.custom("HelveticaNeue-Bold", size: 16))
+                    
+                    TextEditor(text: $vm.noteText)
+                        .background(Color(.systemGray6))
+                        .frame(height: 202)
+                        .cornerRadius(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray, lineWidth: 1)
+                        )
+                        .tint(.pink)
+                        .multilineTextAlignment(.leading)
+                }
+                
+                // Seletor de imagem
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Selecionar uma foto da sua galeria")
+                        .font(.custom("HelveticaNeue-Bold", size: 16))
+                    
+                    if let data = vm.selectedImageData {
+                        ImageDisplayRef(imageData: Binding(
+                            get: { data },
+                            set: { newValue in
+                                vm.selectedImageData = newValue
+                            }
+                        )) {
+                            vm.deleteImage()
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: 254)
+                        
+                    } else {
+                        ImagePickerButton(selectedItem: $vm.selectedItem)
+                            .onChange(of: vm.selectedItem) { oldItem, newItem in
+                                Task {
+                                    await vm.loadImage()
+                                }
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: 254)
+                    }
+                }
+                
+                Spacer()
+            }
+            .padding(.top, 38)
+            .padding(.horizontal, 16)
+            .background(Color.backgroundSecondary)
+            .navigationTitle("Criar nova referência")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .resizable()
+                            .frame(width: 44, height: 44)
+                            .foregroundStyle(.gray)
+                    }
+                }
+                
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        Task {
+                            await vm.saveReference()
+                        }
+                    } label: {
+                        if vm.isLoading {
+                            ProgressView()
+                                .frame(width: 44, height: 44)
+                        } else {
+                            Image(systemName: "arrow.up.circle.fill")
+                                .resizable()
+                                .frame(width: 44, height: 44)
+                                .foregroundStyle(.pink)
+                        }
+                    }
+                    .disabled(vm.selectedImageData == nil || vm.isLoading)
+                }
+            }
+            .alert("Erro", isPresented: .constant(vm.errorMessage != nil)) {
+                Button("OK", role: .cancel) {
+                    vm.errorMessage = nil
+                }
+            } message: { 
+                Text(vm.errorMessage ?? "")
+            }
+        }
+    }
+}

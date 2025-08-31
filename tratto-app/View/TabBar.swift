@@ -14,17 +14,17 @@ struct TabBar: View {
     var body: some View {
         TabView {
             // Aba 1: Tatuadores
-            NavigationStack {
+//            NavigationStack {
                 Tatuadores()
-            }
+//            }
             .tabItem {
                 Label("Tatuadores", systemImage: "person.2.fill")
             }
             
             // Aba 2: Coleções
-            NavigationStack {
+//            NavigationStack {
                 CollectionsView(vm: CollectionsVM(collectionService: container.collectionService))
-            }
+//            }
             .tabItem {
                 Label("Coleções", systemImage: "photo.fill")
             }
@@ -42,9 +42,9 @@ struct TabBar: View {
 //            }
             
             // Aba 3: Favoritos
-            NavigationStack {
+//            NavigationStack {
 //                Favorites(modelContext: <#ModelContext#>) // Não precisa passar modelContext manualmente!
-            }
+//            }
             .tabItem {
                 Label("Favoritos", systemImage: "heart.fill")
             }

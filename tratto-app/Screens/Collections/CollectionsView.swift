@@ -28,9 +28,6 @@ struct CollectionsView: View {
             contentView
                 .navigationTitle("Coleções")
                 .toolbar(shouldHideTabBar ? .hidden : .visible, for: .tabBar)
-                .toolbar {
-                    toolbarContent
-                }
                 .background(.backgroundPrimary)
                 .sheet(isPresented: $addCollection) { addCollectionView }
                 .alert("Tem certeza que deseja excluir estas coleções?",
@@ -40,10 +37,14 @@ struct CollectionsView: View {
                 .task {
                     await vm.loadCollections()
                 }
-        }
-        .navigationDestination(for: Collection.self) { collection in
-            // CollectionDetail pode ter sua própria navegação interna
-            CollectionDetail(collection: collection, collectionService: diContainer.collectionService)
+                // ✅ CORRETO: navigationDestination DENTRO do NavigationStack
+                .navigationDestination(for: Collection.self) { collection in
+                    CollectionDetail(vm: CollectionDetailVM(
+                        collection: collection,
+                        collectionService: diContainer.collectionService,
+                    )
+                    )
+                }
         }
     }
 }

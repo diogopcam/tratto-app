@@ -5,14 +5,6 @@
 //  Created by Diogo Camargo on 21/08/25.
 //
 
-
-//
-//  DatabaseCleanerService.swift
-//  tratto-app
-//
-//  Created by Your Name on 21/08/25.
-//
-
 import SwiftData
 import SwiftUI
 

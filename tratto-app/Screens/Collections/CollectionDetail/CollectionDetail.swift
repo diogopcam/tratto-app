@@ -9,56 +9,61 @@ import SwiftUI
 import SwiftData
 
 struct CollectionDetail: View {
+    @Environment(\.diContainer) private var diContainer
     @StateObject private var vm: CollectionDetailVM
     @State private var addRefs = false
     @Environment(\.dismiss) private var dismiss
     
-    init(collection: Collection, collectionService: CollectionServiceProtocol) {
-        _vm = StateObject(wrappedValue: CollectionDetailVM(collection: collection, collectionService: collectionService))
+    init(vm: CollectionDetailVM) {
+        _vm = StateObject(wrappedValue: vm)
     }
     
     var body: some View {
-            contentView
-                .navigationBarBackButtonHidden(true)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: { dismiss() }) {
-                            Image(systemName: "chevron.left")
-                                .foregroundColor(.pink)
-                        }
-                    }
-                    
-                    ToolbarItem(placement: .principal) {
-                        Text("Coleção")
-                            .font(.custom("HelveticaNeue-Bold", size: 26))
-                            .foregroundColor(.primary)
-                    }
-                    
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            addRefs = true
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .resizable()
-                                .frame(width: 44, height: 44)
-                                .foregroundColor(.pink)
-                        }
+        contentView
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.pink)
                     }
                 }
-                .sheet(isPresented: $addRefs) {
-                    // AddRefs(collection: vm.collection) { addRefs = false }
+                
+                ToolbarItem(placement: .principal) {
+                    Text("Coleção")
+                        .font(.custom("HelveticaNeue-Bold", size: 26))
+                        .foregroundColor(.primary)
                 }
-                .navigationDestination(for: Reference.self) { reference in
-                    ReferenceDetail(reference: reference)
-                }
-                .alert("Erro", isPresented: .constant(vm.errorMessage != nil), presenting: vm.errorMessage) { error in
-                    Button("OK", role: .cancel) {
-                        vm.errorMessage = nil
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        addRefs = true
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .resizable()
+                            .frame(width: 44, height: 44)
+                            .foregroundColor(.pink)
                     }
-                } message: { error in
-                    Text(error)
                 }
-        }
+            }
+            .sheet(isPresented: $addRefs) {
+                AddRefs(
+                    collection: vm.collection,
+                    collectionService: vm.collectionService,
+                    onSave: {
+                        addRefs = false
+                        vm.loadReferences()
+                    }
+                )
+            }
+            .alert("Erro", isPresented: .constant(vm.errorMessage != nil), presenting: vm.errorMessage) { error in
+                Button("OK", role: .cancel) {
+                    vm.errorMessage = nil
+                }
+            } message: { error in
+                Text(error)
+            }
+    }
     
     @ViewBuilder
     private var contentView: some View {
@@ -69,12 +74,19 @@ struct CollectionDetail: View {
         } else {
             ScrollView {
                 LazyVGrid(columns: [GridItem(), GridItem()], spacing: 16) {
+                    // dentro do LazyVGrid em CollectionDetail
                     ForEach(vm.references) { reference in
-                        ReferenceCard(reference: reference) {
-                            // Navegação programática usando NavigationPath
-//                            navigationPath.append(reference)
-                            vm.selectedReference = reference
+                        NavigationLink {
+                            ReferenceDetail(
+                                vm: ReferenceDetailVM(
+                                    reference: reference,
+                                    referenceService: diContainer.referenceService
+                                )
+                            )
+                        } label: {
+                            ReferenceCard(reference: reference)
                         }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
                 .padding()
