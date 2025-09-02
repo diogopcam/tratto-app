@@ -28,6 +28,9 @@ struct CollectionsView: View {
             contentView
                 .navigationTitle("Coleções")
                 .toolbar(shouldHideTabBar ? .hidden : .visible, for: .tabBar)
+                .toolbar {
+                    toolbarContent
+                }
                 .background(.backgroundPrimary)
                 .sheet(isPresented: $addCollection) { addCollectionView }
                 .alert("Tem certeza que deseja excluir estas coleções?",

@@ -8,9 +8,57 @@
 import SwiftUI
 import SwiftData
 
+
 struct Tatuadores: View {
+    
+    let all: [TattooArtistProfile] = [
+        TattooArtistProfile(
+            name: "Lucas Pereira",
+            pronoun: "Ele/dele",
+            address: "Rua da Arte, 123 - São Paulo",
+            distance: "15 min de você",
+            bio: "Especialista em realismo e blackwork.",
+            portfolioImages: ["img1", "img2", "img3"]
+        ),
+        TattooArtistProfile(
+            name: "Ana Souza",
+            pronoun: "Ela/dela",
+            address: "Av. Brasil, 456 - Rio de Janeiro",
+            distance: "20 min de você",
+            bio: "Minimalismo, fine line e traços delicados.",
+            portfolioImages: ["img4", "img5", "img6"]
+        ),
+        TattooArtistProfile(
+            name: "Rafael Lima",
+            pronoun: "Ele/dele",
+            address: "Rua Central, 789 - Curitiba",
+            distance: "8 min de você",
+            bio: "Geométrico, tribal e mandalas.",
+            portfolioImages: ["img7", "img8", "img9"]
+        ),
+        TattooArtistProfile(
+            name: "Camila Torres",
+            pronoun: "Ela/dela",
+            address: "Praça das Flores, 321 - Porto Alegre",
+            distance: "12 min de você",
+            bio: "Colorido vibrante e estilo aquarela.",
+            portfolioImages: ["img10", "img11", "img12"]
+        ),
+        TattooArtistProfile(
+            name: "Diego Martins",
+            pronoun: "Ele/dele",
+            address: "Rua dos Sonhos, 654 - Belo Horizonte",
+            distance: "25 min de você",
+            bio: "Old school, new school e tattoos autorais.",
+            portfolioImages: ["img13", "img14", "img15"]
+        )
+    ]
+    
     let mockTattooArtist = TattooArtistProfile(
         name: "Lucas Pereira",
+        pronoun: "Ele/dele",
+        address: "Rua dos Sonhos, 654 - Belo Horizonte",
+        distance: "25 min de você",
         bio: "Especialista em realismo e blackwork.",
         portfolioImages: ["img2", "img4"]
     )
@@ -38,18 +86,23 @@ struct Tatuadores: View {
     
     var body: some View {
         ZStack {
-            // 1. Imagem em tela cheia
-            TabView(selection: $currentIndex) {
-                ForEach(Array(mockTattooArtist.portfolioImages.enumerated()), id: \.offset) { index, imageName in
-                    Image(imageName)
-                        .resizable()
-                        .scaledToFill()
-                        .ignoresSafeArea()
-                        .tag(index)
+            // 0. Perfil do tatuador
+            Group {
+                ForEach(Array(all.enumerated())), 
+                // 1. Imagem em tela cheia
+                TabView(selection: $currentIndex) {
+                    ForEach(Array(mockTattooArtist.portfolioImages.enumerated()), id: \.offset) { index, imageName in
+                        Image(imageName)
+                            .resizable()
+                            .scaledToFill()
+                            .ignoresSafeArea()
+                            .tag(index)
+                    }
                 }
+                    
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .ignoresSafeArea()
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .ignoresSafeArea()
             
             // 2. Conteúdo sobreposto
             VStack {
