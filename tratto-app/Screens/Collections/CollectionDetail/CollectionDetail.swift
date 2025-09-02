@@ -81,7 +81,10 @@ struct CollectionDetail: View {
                                 vm: ReferenceDetailVM(
                                     reference: reference,
                                     referenceService: diContainer.referenceService
-                                )
+                                ),
+                                onDelete: {
+                                    vm.loadReferences() // recarrega a lista após exclusão
+                                }
                             )
                         } label: {
                             ReferenceCard(reference: reference)

@@ -12,9 +12,21 @@ struct ReferenceDetail: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var vm: ReferenceDetailVM
     @State private var showDeleteConfirmation: Bool = false
+    var onDelete: (() -> Void)?
     
-    init(vm: ReferenceDetailVM) {
+    init(vm: ReferenceDetailVM, onDelete: (() -> Void)? = nil) {
         _vm = StateObject(wrappedValue: vm)
+        self.onDelete = onDelete
+    }
+    
+    private func handleDelete() {
+        Task {
+            let success = await vm.deleteReference()
+            if success {
+                onDelete?()
+                dismiss()
+            }
+        }
     }
     
     var body: some View {
@@ -41,10 +53,7 @@ struct ReferenceDetail: View {
         .alert("Tem certeza que deseja excluir esta referência?",
                isPresented: $showDeleteConfirmation) {
             Button("Excluir", role: .destructive) {
-                Task {
-                    let success = await vm.deleteReference()
-                    if success { dismiss() }
-                }
+                handleDelete()
             }
             Button("Cancelar", role: .cancel) { }
         }
