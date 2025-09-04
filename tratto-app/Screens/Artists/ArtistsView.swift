@@ -63,96 +63,31 @@ struct Tatuadores: View {
         portfolioImages: ["img2", "img4"]
     )
     
+    init() {
+        // Pega a cor do asset e transforma em UIColor
+        let color = UIColor(named: "BackgroundSecondary") ?? UIColor.blue
+        
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = color
+        
+        UITabBar.appearance().standardAppearance = appearance
+        if #available(iOS 15.0, *) {
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+    }
+    
     @State private var currentIndex = 0
     
-    init() {
-        // Configuração da NavBar transparente
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = .clear
-        appearance.shadowColor = .clear
-        UINavigationBar.appearance().standardAppearance = appearance
-        UINavigationBar.appearance().scrollEdgeAppearance = appearance
-        
-        // Configuração da TabBar transparente
-        let tabAppearance = UITabBarAppearance()
-        tabAppearance.configureWithTransparentBackground()
-        tabAppearance.backgroundColor = .clear
-        UITabBar.appearance().standardAppearance = tabAppearance
-        if #available(iOS 15.0, *) {
-            UITabBar.appearance().scrollEdgeAppearance = tabAppearance
-        }
-    }
-    
     var body: some View {
-        ZStack {
-            // 0. Perfil do tatuador
-            Group {
-                ForEach(Array(all.enumerated())), 
-                // 1. Imagem em tela cheia
-                TabView(selection: $currentIndex) {
-                    ForEach(Array(mockTattooArtist.portfolioImages.enumerated()), id: \.offset) { index, imageName in
-                        Image(imageName)
-                            .resizable()
-                            .scaledToFill()
-                            .ignoresSafeArea()
-                            .tag(index)
-                    }
-                }
-                    
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .ignoresSafeArea()
-            }
-            
-            // 2. Conteúdo sobreposto
+        // ESSA ZStack deve ser o componente de perfil do tatuador, e o for
+        ScrollView {
             VStack {
-                Spacer()
-                
-                // VStack de informações
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack(alignment: .firstTextBaseline, spacing: 12){
-                        Text("Nome tatuador")
-                            .font(.custom("HelveticaNeue-Bold", size: 36))
-                        Text("Ele/dele")
-                            .font(.custom("HelveticaNeue-Regular", size: 16))
-                    }
-                    Text("Endereço do tatuador")
-                        .font(.custom("HelveticaNeue-Light", size: 16))
-                    Text("Quanto tempo até seu endereço")
-                        .font(.custom("HelveticaNeue-Light", size: 16))
-                }
-                .foregroundColor(.white)
-                .padding(.leading, 16)
-                .padding(.vertical, 12)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, 54)
-                
-                // Page control personalizado
-                HStack {
-                    Spacer()
-                    HStack(spacing: 8) {
-                        ForEach(0..<mockTattooArtist.portfolioImages.count, id: \.self) { index in
-                            Circle()
-                                .fill(currentIndex == index ? Color.white : Color.white.opacity(0.5))
-                                .frame(width: 8, height: 8)
-                        }
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .cornerRadius(12)
-                    .padding(.bottom, 40) // Distância da TabBar
-                    Spacer()
+                ForEach(all) { artist in
+                    TattooArtistProfileView(artist: artist)
+                        .frame(height: UIScreen.main.bounds.height)
                 }
             }
         }
-    }
-}
-
-#Preview {
-    NavigationView {
-        Tatuadores()
-    }
-    .tabItem {
-        Label("Tatuadores", systemImage: "person.fill")
     }
 }

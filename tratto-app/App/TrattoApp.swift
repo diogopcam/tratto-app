@@ -31,6 +31,7 @@ struct TrattoApp: App {
             TabBar()
                 .environment(\.diContainer, diContainer)
                 .modelContainer(diContainer.modelContainer)
+                .preferredColorScheme(.dark) // força Dark Mode
         }
     }
 }

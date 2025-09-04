@@ -15,7 +15,7 @@ struct TabBar: View {
         TabView {
             // Aba 1: Tatuadores
 //            NavigationStack {
-                Tatuadores()
+            Tatuadores()
 //            }
             .tabItem {
                 Label("Tatuadores", systemImage: "person.2.fill")
@@ -50,5 +50,6 @@ struct TabBar: View {
             }
         }
         .tint(.pink)
+        .foregroundStyle(.yellow)
     }
 }
