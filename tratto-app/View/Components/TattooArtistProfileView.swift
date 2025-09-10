@@ -7,25 +7,27 @@
 
 import SwiftUI
 
-
 struct TattooArtistProfileView: View {
     let artist: TattooArtistProfile
-    @State private var currentIndex: Int = 0
+    @State private var currentImageIndex: Int = 0
     
     var body: some View {
         ZStack {
-            TabView(selection: $currentIndex) {
+            // TabView para as imagens do portfolio
+            TabView(selection: $currentImageIndex) {
                 ForEach(Array(artist.portfolioImages.enumerated()), id: \.offset) { index, imageName in
                     Image(imageName)
                         .resizable()
                         .scaledToFill()
-                        .ignoresSafeArea()
+                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                        .clipped()
                         .tag(index)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .ignoresSafeArea()
             
+            // Overlay com informações
             VStack {
                 Spacer()
                 
@@ -47,17 +49,19 @@ struct TattooArtistProfileView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.bottom, 54)
                 
+                // Indicadores de página para as imagens
                 HStack {
                     Spacer()
                     HStack(spacing: 8) {
                         ForEach(0..<artist.portfolioImages.count, id: \.self) { index in
                             Circle()
-                                .fill(currentIndex == index ? Color.white : Color.white.opacity(0.5))
+                                .fill(currentImageIndex == index ? Color.white : Color.white.opacity(0.5))
                                 .frame(width: 8, height: 8)
                         }
                     }
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
+                    .background(Color.black.opacity(0.3))
                     .cornerRadius(12)
                     .padding(.bottom, 40)
                     Spacer()
@@ -65,5 +69,7 @@ struct TattooArtistProfileView: View {
             }
             .offset(y: -90)
         }
+        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        .background(Color.black) // Fundo preto para áreas sem imagem
     }
 }

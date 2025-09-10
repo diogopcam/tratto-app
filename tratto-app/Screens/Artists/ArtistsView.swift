@@ -10,6 +10,7 @@ import SwiftData
 
 
 struct Tatuadores: View {
+    @State private var currentIndex: Int = 0
     
     let all: [TattooArtistProfile] = [
         TattooArtistProfile(
@@ -77,17 +78,35 @@ struct Tatuadores: View {
         }
     }
     
-    @State private var currentIndex = 0
+    @GestureState private var dragOffset: CGFloat = 0
     
     var body: some View {
-        // ESSA ZStack deve ser o componente de perfil do tatuador, e o for
-        ScrollView {
-            VStack {
-                ForEach(all) { artist in
-                    TattooArtistProfileView(artist: artist)
-                        .frame(height: UIScreen.main.bounds.height)
+        GeometryReader { geo in
+            VStack(spacing: 0) {
+                ForEach(all.indices, id: \.self) { index in
+                    TattooArtistProfileView(artist: all[index])
+                        .frame(width: geo.size.width, height: geo.size.height)
                 }
             }
+            .offset(y: -CGFloat(currentIndex) * geo.size.height + dragOffset)
+            .gesture(
+                DragGesture()
+                    .updating($dragOffset) { value, state, _ in
+                        state = value.translation.height
+                    }
+                    .onEnded { value in
+                        let threshold = geo.size.height / 3
+                        if value.translation.height < -threshold, currentIndex < all.count - 1 {
+                            currentIndex += 1
+                        }
+                        if value.translation.height > threshold, currentIndex > 0 {
+                            currentIndex -= 1
+                        }
+                    }
+            )
+            .animation(.easeInOut, value: currentIndex)
         }
+        .ignoresSafeArea()
     }
 }
+
