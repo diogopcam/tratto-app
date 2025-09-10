@@ -17,7 +17,7 @@ struct TrattoApp: App {
             let container = try ModelContainer(for: appSchema)
             self.diContainer = DIContainer(modelContainer: container)
         } catch {
-            print("⚠️ Erro ao criar container persistente: \(error)")
+            print("Erro ao criar container persistente: \(error)")
             let fallback = try! ModelContainer(
                 for: appSchema,
                 configurations: ModelConfiguration(isStoredInMemoryOnly: true)
@@ -31,7 +31,7 @@ struct TrattoApp: App {
             TabBar()
                 .environment(\.diContainer, diContainer)
                 .modelContainer(diContainer.modelContainer)
-                .preferredColorScheme(.dark) // força Dark Mode
+                .preferredColorScheme(.dark)
         }
     }
 }
