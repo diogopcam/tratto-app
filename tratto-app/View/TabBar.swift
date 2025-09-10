@@ -13,43 +13,22 @@ struct TabBar: View {
     
     var body: some View {
         TabView {
-            // Aba 1: Tatuadores
-//            NavigationStack {
             Tatuadores()
-//            }
             .tabItem {
                 Label("Tatuadores", systemImage: "person.2.fill")
             }
             
-            // Aba 2: Coleções
-//            NavigationStack {
-                CollectionsView(vm: CollectionsVM(collectionService: container.collectionService))
-//            }
+            CollectionsView(vm: CollectionsVM(collectionService: container.collectionService))
             .tabItem {
                 Label("Coleções", systemImage: "photo.fill")
             }
             
-//            // Categories Tab
-//            NavigationStack {
-//                CategoriesView(
-//                    vm: CategoriesVM(
-//                        apiService: container.apiService
-//                    )
-//                )
-//            }
-//            .tabItem {
-//                Label("Categories", systemImage: "square.grid.2x2.fill")
-//            }
-            
-            // Aba 3: Favoritos
-//            NavigationStack {
-//                Favorites(modelContext: <#ModelContext#>) // Não precisa passar modelContext manualmente!
-//            }
+            FavoritesView(vm: FavoritesVM(favoritesService: container.favoritesService))
             .tabItem {
                 Label("Favoritos", systemImage: "heart.fill")
             }
         }
         .tint(.pink)
-        .foregroundStyle(.yellow)
+        .foregroundStyle(.pink)
     }
 }

@@ -30,6 +30,7 @@ struct AddRefs: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Insira uma anotação sobre a referência")
                         .font(.custom("HelveticaNeue-Bold", size: 16))
+                        .foregroundColor(.labelPrimary)
                     
                     TextEditor(text: $vm.noteText)
                         .background(Color(.systemGray6))
@@ -39,14 +40,15 @@ struct AddRefs: View {
                             RoundedRectangle(cornerRadius: 8)
                                 .stroke(Color.gray, lineWidth: 1)
                         )
+                        .foregroundColor(.labelPrimary)
                         .tint(.pink)
                         .multilineTextAlignment(.leading)
                 }
                 
-                // Seletor de imagem
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Selecionar uma foto da sua galeria")
                         .font(.custom("HelveticaNeue-Bold", size: 16))
+                        .foregroundColor(.labelPrimary)
                     
                     if let data = vm.selectedImageData {
                         ImageDisplayRef(imageData: Binding(

@@ -14,6 +14,7 @@ final class DIContainer {
     //    let tattooArtistService: TattooArtistServiceProtocol
     let collectionService: CollectionServiceProtocol
     let referenceService: ReferenceServiceProtocol
+    let favoritesService: FavoritesServiceProtocol
     var databaseCleaner: DatabaseCleanerServiceProtocol?
     
     init(modelContainer: ModelContainer) {
@@ -21,7 +22,7 @@ final class DIContainer {
         //        self.tattooArtistService = TattooArtistService(context: modelContainer.mainContext)
         self.collectionService = CollectionService(context: modelContainer.mainContext)
         self.referenceService = ReferenceService(context: modelContainer.mainContext)
-        self.databaseCleaner = DatabaseCleanerService(context: modelContainer.mainContext)
+        self.favoritesService = FavoritesService(context: modelContainer.mainContext)
         self.databaseCleaner = DatabaseCleanerService(context: modelContainer.mainContext)
     }
     
@@ -33,6 +34,7 @@ final class DIContainer {
         )
         collectionService = CollectionService(context: modelContainer.mainContext)
         referenceService = ReferenceService(context: modelContainer.mainContext)
+        favoritesService = FavoritesService(context: modelContainer.mainContext)
     }
     
     // Método conveniente para limpar tudo

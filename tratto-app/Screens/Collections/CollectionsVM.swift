@@ -16,9 +16,9 @@ final class CollectionsVM: CollectionsVMProtocol {
     @Published var selectedCollections: Set<Collection> = []
     @Published var showDeleteConfirmation: Bool = false
     
-    private let collectionService: CollectionServiceProtocol
+    private let collectionService: any CollectionServiceProtocol
     
-    init(collectionService: CollectionServiceProtocol) {
+    init(collectionService: any CollectionServiceProtocol) {
         self.collectionService = collectionService
     }
     

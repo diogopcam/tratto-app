@@ -119,13 +119,14 @@ struct CollectionCard: View {
             
             Text(title)
                 .font(.custom("HelveticaNeue-Bold", size: 17))
+                .foregroundColor(.labelPrimary)
                 .lineLimit(1)
             
             Text("\(itemCount) item\(itemCount == 1 ? "" : "s")")
                 .font(.custom("HelveticaNeue-Thin", size: 12))
                 .foregroundColor(.gray)
         }
-        .contentShape(Rectangle()) // Para toda área receber o gesto
+        .contentShape(Rectangle())
         .onTapGesture {
             onTap?()
         }
