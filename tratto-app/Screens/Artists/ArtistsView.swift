@@ -10,7 +10,8 @@ import SwiftUI
 struct Tatuadores: View {
     @State private var currentIndex: Int = 0
     @GestureState private var dragOffset: CGFloat = 0
-    @State private var isLiked: Bool = false   // controla o estado do botão
+    @State private var isLiked: Bool = false
+    @State private var showFilterSheet = false
     
     let all: [TattooArtistProfile] = [
         TattooArtistProfile(
@@ -118,6 +119,7 @@ struct Tatuadores: View {
 
                     Button {
                         print("⚙️ botão de filtro")
+                        showFilterSheet = true
                     } label: {
                         Image(systemName: "slider.horizontal.3")
                             .resizable()
@@ -127,6 +129,9 @@ struct Tatuadores: View {
                             .frame(width: 60, height: 60)
                             .background(Color.gray.opacity(0.7))
                             .clipShape(Circle())
+                    }
+                    .sheet(isPresented: $showFilterSheet) {
+                        FilterSheet()
                     }
                 }
                 

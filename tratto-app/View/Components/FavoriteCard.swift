@@ -22,20 +22,20 @@ struct FavoriteCard: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(artist.name)
-                    .font(.system(size: 17, weight: .bold))
+                    .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.white)
                     .lineLimit(1)
                 
                 Text(artist.pronoun)
-                    .font(.system(size: 12, weight: .regular))
+                    .font(.system(size: 16, weight: .regular))
                     .foregroundColor(.white)
                 
                 Text(artist.address)
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.system(size: 12, weight: .regular))
                     .foregroundColor(.white)
-                    .lineLimit(2)
+                    .lineLimit(1)
                     .multilineTextAlignment(.leading)
-                    .padding(.top, 75)
+                    .padding(.top, 70)
             }
             
             .padding(.top, 16)
