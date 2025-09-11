@@ -71,8 +71,11 @@ struct AddCollectionView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Insira o nome da sua pasta")
                 .font(.custom("HelveticaNeue-Bold", size: 16))
+                .foregroundStyle(.labelPrimary)
+            
             
             TextField(" ", text: $vm.collectionName)
+                .foregroundStyle(.labelPrimary)
                 .padding()
                 .background(Color(.systemGray6))
                 .cornerRadius(8)
@@ -88,6 +91,7 @@ struct AddCollectionView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Selecionar fotos da galeria")
                 .font(.custom("HelveticaNeue-Bold", size: 16))
+                .foregroundStyle(.labelPrimary)
             
             HStack(alignment: .center, spacing: 12) {
                 // ✅ CORRETO - PhotosPicker com Binding direto + ImageActionButton genérico

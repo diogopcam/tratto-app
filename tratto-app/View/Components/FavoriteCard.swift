@@ -16,33 +16,33 @@ struct FavoriteCard: View {
             Image(artist.portfolioImages.first ?? "avatar")
                 .resizable()
                 .scaledToFill()
-                .frame(width: 80, height: 80)
+                .frame(width: 165, height: 165) // altura fixa
                 .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipped()
             
-            // Informações do tatuador
-            VStack(alignment: .leading, spacing: 6) {
-                HStack(alignment: .firstTextBaseline, spacing: 6) {
-                    Text(artist.name)
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.white)
-                        .lineLimit(1)
-                    
-                    Text(artist.pronoun)
-                        .font(.system(size: 12, weight: .regular))
-                        .foregroundColor(.gray)
-                }
+            VStack(alignment: .leading, spacing: 4) {
+                Text(artist.name)
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+                
+                Text(artist.pronoun)
+                    .font(.system(size: 12, weight: .regular))
+                    .foregroundColor(.white)
                 
                 Text(artist.address)
-                    .font(.system(size: 14, weight: .regular))
-                    .foregroundColor(.white.opacity(0.8))
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(.white)
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
+                    .padding(.top, 75)
             }
+            
+            .padding(.top, 16)
             
             Spacer()
         }
-        .padding(16)
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: 165)
         .background(Color.black)
         .cornerRadius(16)
         .overlay(
@@ -51,6 +51,7 @@ struct FavoriteCard: View {
         )
     }
 }
+
 
 // Visualização de exemplo para testar o componente
 struct FavoriteCard_Previews: PreviewProvider {

@@ -101,33 +101,49 @@ struct Tatuadores: View {
                         }
                 )
                 
-                // 🔥 Botões alinhados no canto superior direito
+                // Botões alinhados no canto superior direito
                 HStack(spacing: 12) {
                     Button {
-                        print("❤️ botão de curtir")
+                        print("botão de curtir")
                     } label: {
                         Image(systemName: "heart.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
                             .foregroundColor(.white)
                             .frame(width: 60, height: 60)
-                            .background(Color.black.opacity(0.6))
+                            .background(Color.pink)
                             .clipShape(Circle())
                     }
 
                     Button {
                         print("⚙️ botão de filtro")
                     } label: {
-                        Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                        Image(systemName: "slider.horizontal.3")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 25, height: 25)
                             .foregroundColor(.white)
                             .frame(width: 60, height: 60)
-                            .background(Color.black.opacity(0.6))
+                            .background(Color.gray.opacity(0.7))
                             .clipShape(Circle())
                     }
                 }
                 
-                .padding(.top, 50) // distancia do topo (abaixo da Dynamic Island)
-                .padding(.trailing, 20) // distancia da lateral direita
+                .padding(.top, 50)
+                .padding(.trailing, 20)
             }
         }
         .ignoresSafeArea()
+    }
+}
+
+import SwiftUI
+
+struct Tatuadores_Previews: PreviewProvider {
+    static var previews: some View {
+        Tatuadores()
+            .previewDevice("iPhone 14 Pro") // opcional: define um dispositivo específico
+            .previewDisplayName("Feed de Tatuadores")
     }
 }
